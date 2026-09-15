@@ -6,74 +6,70 @@
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)
 
-**Dashboard full-stack para organizar vagas, acompanhar candidaturas e medir a compatibilidade entre o perfil técnico do usuário e os requisitos de cada oportunidade.**
+**Dashboard full-stack para descobrir vagas, comparar oportunidades com seu perfil técnico e acompanhar candidaturas em um único lugar.**
 
-> Portfolio project built with Python/FastAPI to demonstrate backend engineering, authentication, relational persistence, explainable matching, testing, CI and a functional web interface.
+**Live demo:** https://jobfit-api-rodrigo.onrender.com  
+**API docs:** https://jobfit-api-rodrigo.onrender.com/docs
 
-## ✨ O que o projeto faz
+> Portfolio project built with Python/FastAPI to demonstrate backend engineering, authentication, external API aggregation, explainable matching, relational persistence, testing, CI and frontend/API integration.
 
-O JobFit permite criar uma conta, cadastrar suas skills, salvar oportunidades e acompanhar o processo seletivo em um pipeline visual. Cada vaga recebe um **match score explicável**, com skills compatíveis e skills que ainda faltam no perfil.
+## ✨ Principais recursos
 
-A interface web consome a própria API FastAPI — não é apenas uma tela estática. Login, perfil, vagas, scores e candidaturas usam os endpoints reais do backend.
-
-### Principais recursos
-
+- descoberta de vagas em múltiplas fontes públicas: **Remotive + Arbeitnow**;
+- busca por palavra-chave, fonte, localização, categoria e tipo;
+- opção de exibir somente vagas remotas;
+- ordenação por data, empresa, cargo ou compatibilidade com o perfil;
+- favoritos persistidos no navegador;
+- prevenção de duplicatas ao salvar vagas externas;
+- data de publicação e link direto para a vaga original;
 - autenticação JWT com Bearer Token;
-- isolamento dos dados por usuário;
+- isolamento de dados por usuário;
 - perfil técnico editável;
 - cadastro, listagem, exclusão e reavaliação de vagas;
-- match score baseado em skills técnicas normalizadas;
-- explicação do score com `matched_skills` e `missing_skills`;
+- match score explicável com skills compatíveis e ausentes;
 - pipeline de candidatura: applied → screening → interview → technical → offer/rejected;
 - estatísticas autenticadas do workspace;
-- dashboard responsivo integrado à API;
-- SQLite para desenvolvimento e PostgreSQL via Docker Compose;
-- documentação automática Swagger/OpenAPI;
-- testes unitários e fluxo end-to-end autenticado com pytest;
-- CI com GitHub Actions;
-- ambiente Codespaces/devcontainer com Python 3.12;
-- blueprint `render.yaml` para deploy com PostgreSQL.
+- dashboard responsivo consumindo a própria API FastAPI;
+- SQLite em desenvolvimento e PostgreSQL preparado para produção;
+- Docker, Codespaces, Swagger/OpenAPI, pytest e GitHub Actions.
 
-## 🖥️ Dashboard
+## 🔎 Descoberta de vagas
 
-Depois de iniciar a aplicação, abra:
+O endpoint `/discover/jobs` agrega resultados externos em um formato único. Exemplo:
 
 ```text
-http://localhost:8000/
+/discover/jobs?q=python&source=all&remote_only=true&sort=recent
 ```
 
-A interface permite realizar todo o fluxo principal sem precisar montar `curl` manualmente.
+Parâmetros disponíveis incluem `q`, `source`, `location`, `category`, `job_type`, `remote_only`, `sort` e `limit`.
 
-A documentação técnica continua disponível em:
+O frontend permite favoritar resultados, identificar vagas já salvas e ordenar por um match rápido quando o usuário está autenticado. Ao salvar uma oportunidade, o backend calcula o score definitivo usando o motor de matching do JobFit.
 
-```text
-http://localhost:8000/docs
-```
+As fontes externas continuam identificadas e cada vaga aponta para sua página original, respeitando a atribuição exigida pelos provedores.
 
 ## 🧠 Match explicável
 
-O motor de matching normaliza aliases técnicos — por exemplo `Postgres → PostgreSQL`, `JS → JavaScript` e `REST APIs → REST` — e prioriza termos reconhecidos como tecnologias.
-
-Exemplo de análise:
+O motor normaliza aliases técnicos — por exemplo `Postgres → PostgreSQL`, `JS → JavaScript` e `REST APIs → REST` — e compara tecnologias reconhecidas no perfil e na oportunidade.
 
 ```json
 {
   "score": 75.0,
   "matched_skills": ["fastapi", "postgresql", "python"],
-  "missing_skills": ["docker"],
-  "profile_skills": ["fastapi", "postgresql", "python"],
-  "required_skills": ["docker", "fastapi", "postgresql", "python"]
+  "missing_skills": ["docker"]
 }
 ```
 
-Essa abordagem é propositalmente determinística, barata e explicável. Uma evolução futura pode incluir embeddings ou LLMs sem remover a camada interpretável atual.
+A abordagem é propositalmente determinística e interpretável. Uma evolução futura pode incluir embeddings ou LLMs sem remover a camada explicável atual.
 
 ## 🏗️ Arquitetura
 
 ```mermaid
 flowchart LR
+    R[Remotive] --> D[Discovery Service]
+    A[Arbeitnow] --> D
     U[Usuário] --> UI[Dashboard HTML/CSS/JS]
     UI --> API[FastAPI]
+    API --> D
     API --> AUTH[JWT Auth]
     API --> MATCH[Matching Engine]
     API --> ORM[SQLAlchemy]
@@ -95,6 +91,7 @@ app/
 │   ├── profile.py
 │   ├── jobs.py
 │   ├── applications.py
+│   ├── discovery.py
 │   └── stats.py
 ├── services/
 │   └── matching.py
@@ -116,34 +113,14 @@ python -m pip install -r requirements.txt
 python -m uvicorn app.main:app --reload
 ```
 
-Abra `http://localhost:8000/`.
+Dashboard: `http://localhost:8000/`  
+Swagger: `http://localhost:8000/docs`
 
 ## 🐳 Docker + PostgreSQL
 
 ```bash
 docker compose up --build
 ```
-
-A API ficará disponível na porta `8000` e usará PostgreSQL pelo serviço `db` do Compose.
-
-## ☁️ GitHub Codespaces
-
-O repositório inclui `.devcontainer/devcontainer.json`. Ao criar um Codespace, o ambiente usa Python 3.12, cria `.venv` e instala as dependências automaticamente.
-
-Depois:
-
-```bash
-source .venv/bin/activate
-python -m uvicorn app.main:app --reload --host 0.0.0.0
-```
-
-Abra a porta encaminhada `8000`.
-
-## 🌍 Deploy
-
-O arquivo `render.yaml` deixa o projeto preparado para um Blueprint no Render com serviço Docker + PostgreSQL. O backend também normaliza URLs `postgres://` e `postgresql://` para o driver psycopg 3 automaticamente.
-
-No deploy, mantenha `SECRET_KEY` como segredo gerado pelo provedor e use `/health` como health check.
 
 ## 🔌 Endpoints principais
 
@@ -152,6 +129,7 @@ No deploy, mantenha `SECRET_KEY` como segredo gerado pelo provedor e use `/healt
 | POST | `/auth/register` | Criar conta |
 | POST | `/auth/login` | Gerar JWT |
 | GET/PUT | `/profile` | Ler/atualizar perfil |
+| GET | `/discover/jobs` | Agregar e filtrar vagas externas |
 | POST/GET | `/jobs` | Salvar/listar vagas |
 | GET | `/jobs/{id}/analysis` | Explicar compatibilidade |
 | POST | `/jobs/{id}/rescore` | Recalcular score |
@@ -160,42 +138,36 @@ No deploy, mantenha `SECRET_KEY` como segredo gerado pelo provedor e use `/healt
 | PATCH | `/applications/{id}` | Atualizar etapa |
 | GET | `/stats` | Estatísticas do usuário |
 | GET | `/health` | Health check |
-| GET | `/api` | Metadados da API |
 
-## 🧪 Testes
+## 🧪 Testes e CI
 
 ```bash
 pytest -q
 ```
 
-A suíte cobre health check, dashboard, aliases do motor de matching, explicação de skills ausentes e um fluxo end-to-end com **registro → login → perfil → vaga → análise → candidatura → entrevista → estatísticas** usando banco SQLite isolado em memória.
-
-O GitHub Actions também executa uma verificação de compilação antes dos testes.
+A suíte cobre health check, matching, helpers de descoberta e fluxo autenticado end-to-end. O GitHub Actions executa verificação de compilação e testes a cada push/PR.
 
 ## 🔐 Configuração
-
-Copie `.env.example` e altere os valores antes de uso fora de desenvolvimento:
 
 ```bash
 cp .env.example .env
 ```
 
-Em produção, use um `SECRET_KEY` forte e um banco PostgreSQL gerenciado. Consulte também `SECURITY.md`.
+Nunca publique o `SECRET_KEY`. Consulte `SECURITY.md` para orientações adicionais.
 
 ## 🛣️ Próximas evoluções
 
 - Alembic para migrations;
-- refresh tokens;
-- filtros avançados por salário, senioridade e modalidade;
+- persistência de favoritos no backend;
 - importação de vagas por URL;
-- lembretes de follow-up;
+- alertas e lembretes de follow-up;
 - exportação CSV;
 - embeddings para comparação semântica;
-- deploy público contínuo.
+- mais provedores de vagas com adaptadores independentes.
 
 ## 🎯 O que este projeto demonstra
 
-**Python backend development · FastAPI · REST API design · JWT authentication · authorization · SQLAlchemy · PostgreSQL · Docker · pytest · CI/CD fundamentals · frontend/API integration · explainable text matching.**
+**Python backend development · FastAPI · REST API design · external API aggregation · JWT authentication · authorization · SQLAlchemy · PostgreSQL · Docker · pytest · CI/CD · frontend/API integration · explainable matching.**
 
 ## Autor
 
