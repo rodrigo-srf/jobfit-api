@@ -25,10 +25,11 @@ A interface web consome a própria API FastAPI — não é apenas uma tela está
 - match score baseado em skills técnicas normalizadas;
 - explicação do score com `matched_skills` e `missing_skills`;
 - pipeline de candidatura: applied → screening → interview → technical → offer/rejected;
+- estatísticas autenticadas do workspace;
 - dashboard responsivo integrado à API;
 - SQLite para desenvolvimento e PostgreSQL via Docker Compose;
 - documentação automática Swagger/OpenAPI;
-- testes automatizados com pytest;
+- testes unitários e fluxo end-to-end autenticado com pytest;
 - CI com GitHub Actions;
 - ambiente Codespaces/devcontainer com Python 3.12.
 
@@ -92,7 +93,8 @@ app/
 │   ├── auth.py
 │   ├── profile.py
 │   ├── jobs.py
-│   └── applications.py
+│   ├── applications.py
+│   └── stats.py
 ├── services/
 │   └── matching.py
 └── static/
@@ -149,6 +151,7 @@ Abra a porta encaminhada `8000`.
 | DELETE | `/jobs/{id}` | Excluir vaga |
 | POST/GET | `/applications` | Criar/listar candidaturas |
 | PATCH | `/applications/{id}` | Atualizar etapa |
+| GET | `/stats` | Estatísticas do usuário |
 | GET | `/health` | Health check |
 | GET | `/api` | Metadados da API |
 
@@ -158,7 +161,9 @@ Abra a porta encaminhada `8000`.
 pytest -q
 ```
 
-Os testes cobrem health check, disponibilidade do dashboard e comportamento do motor de matching, incluindo aliases e skills ausentes.
+A suíte cobre health check, dashboard, aliases do motor de matching, explicação de skills ausentes e um fluxo end-to-end com **registro → login → perfil → vaga → análise → candidatura → entrevista → estatísticas** usando banco SQLite isolado em memória.
+
+O GitHub Actions também executa uma verificação de compilação antes dos testes.
 
 ## 🔐 Configuração
 
@@ -168,7 +173,7 @@ Copie `.env.example` e altere os valores antes de uso fora de desenvolvimento:
 cp .env.example .env
 ```
 
-Em produção, use um `SECRET_KEY` forte e um banco PostgreSQL gerenciado.
+Em produção, use um `SECRET_KEY` forte e um banco PostgreSQL gerenciado. Consulte também `SECURITY.md`.
 
 ## 🛣️ Próximas evoluções
 
@@ -179,7 +184,6 @@ Em produção, use um `SECRET_KEY` forte e um banco PostgreSQL gerenciado.
 - lembretes de follow-up;
 - exportação CSV;
 - embeddings para comparação semântica;
-- testes de integração completos com banco isolado;
 - deploy público contínuo.
 
 ## 🎯 O que este projeto demonstra
