@@ -1,5 +1,9 @@
 from datetime import datetime
-from pydantic import BaseModel, EmailStr, ConfigDict, Field
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
+ApplicationStage = Literal["applied", "screening", "interview", "technical", "offer", "rejected"]
 
 
 class UserCreate(BaseModel):
@@ -67,12 +71,12 @@ class MatchAnalysis(BaseModel):
 
 class ApplicationCreate(BaseModel):
     job_id: int
-    stage: str = Field(default="applied", max_length=50)
+    stage: ApplicationStage = "applied"
     notes: str = Field(default="", max_length=4000)
 
 
 class ApplicationUpdate(BaseModel):
-    stage: str | None = Field(default=None, max_length=50)
+    stage: ApplicationStage | None = None
     notes: str | None = Field(default=None, max_length=4000)
 
 
@@ -84,3 +88,11 @@ class ApplicationOut(BaseModel):
     notes: str
     applied_at: datetime
     updated_at: datetime
+
+
+class StatsOut(BaseModel):
+    jobs: int
+    applications: int
+    interviews: int
+    offers: int
+    average_match_score: float
