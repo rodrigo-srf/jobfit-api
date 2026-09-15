@@ -1,5 +1,5 @@
 const $ = (id) => document.getElementById(id);
-const state = { token: localStorage.getItem('jobfit_token') || '', jobs: [], applications: [], profile: null };
+const state = { token: localStorage.getItem('jobfit_token') || '', jobs: [], applications: [], profile: null, remoteJobs: [] };
 const stages = ['applied','screening','interview','technical','offer','rejected'];
 
 function toast(message, type='good') {
@@ -72,7 +72,7 @@ function updateAuthUI() {
   $('profileCard').classList.toggle('hidden', !logged);
   $('workspace').classList.toggle('hidden', !logged);
   $('logoutBtn').classList.toggle('hidden', !logged);
-  $('welcome').textContent = logged ? `Olá, ${state.profile.full_name}` : 'API + dashboard full-stack para acompanhar vagas e candidaturas.';
+  $('welcome').textContent = logged ? `Olá, ${state.profile.full_name}` : 'API + dashboard full-stack para encontrar oportunidades remotas e acompanhar candidaturas.';
 }
 
 async function saveProfile(event) {
@@ -106,6 +106,58 @@ async function createJob(event) {
     toast('Vaga adicionada e score calculado.');
     await loadJobs();
     updateStats();
+  } catch (error) { toast(error.message, 'bad'); }
+}
+
+async function searchRemoteJobs(event) {
+  event.preventDefault();
+  const query = $('remoteQuery').value.trim();
+  const root = $('remoteJobs');
+  root.innerHTML = '<div class="empty">Buscando oportunidades reais...</div>';
+  try {
+    const data = await api(`/discover/jobs?q=${encodeURIComponent(query)}&limit=12`);
+    state.remoteJobs = data.jobs || [];
+    renderRemoteJobs();
+  } catch (error) {
+    root.innerHTML = `<div class="empty">Não foi possível buscar vagas agora: ${escapeHtml(error.message)}</div>`;
+  }
+}
+
+function renderRemoteJobs() {
+  const root = $('remoteJobs');
+  if (!state.remoteJobs.length) {
+    root.innerHTML = '<div class="empty">Nenhuma vaga encontrada para essa busca. Tente termos como Python, Backend, FastAPI ou AI.</div>';
+    return;
+  }
+  root.innerHTML = state.remoteJobs.map((job, index) => {
+    const meta = [job.company, job.location, job.job_type, job.salary].filter(Boolean).map(escapeHtml).join(' · ');
+    const description = escapeHtml(job.description || '').slice(0, 320);
+    const sourceUrl = String(job.url || '').startsWith('https://remotive.com/') ? job.url : 'https://remotive.com/';
+    return `<article class="job remote-job"><div class="job-head"><div><h4>${escapeHtml(job.title)}</h4><div class="job-meta">${meta}</div></div><span class="chip">Remotive</span></div><p class="muted">${description}${(job.description || '').length > 320 ? '…' : ''}</p><div class="job-actions"><a class="btn small" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">Ver vaga original</a><button class="btn success small" onclick="saveRemoteJob(${index})">Salvar no JobFit</button></div></article>`;
+  }).join('');
+}
+
+async function saveRemoteJob(index) {
+  if (!state.token) {
+    toast('Faça login ou crie uma conta para salvar a vaga no seu workspace.', 'bad');
+    $('authCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  const job = state.remoteJobs[index];
+  if (!job) return;
+  try {
+    await api('/jobs', { method: 'POST', body: JSON.stringify({
+      title: job.title,
+      company: job.company,
+      description: `${job.description}\n\nFonte: Remotive\n${job.url || ''}`,
+      requirements: job.requirements || '',
+      location: job.location || 'Remote',
+      salary_min: null,
+      salary_max: null,
+    }) });
+    await loadJobs();
+    updateStats();
+    toast('Vaga salva no seu workspace e match calculado.');
   } catch (error) { toast(error.message, 'bad'); }
 }
 
@@ -174,7 +226,7 @@ function renderJobs() {
   if (!state.token) { root.innerHTML = '<div class="empty">Entre para visualizar suas vagas.</div>'; return; }
   const query = ($('jobSearch')?.value || '').toLowerCase();
   const filtered = state.jobs.filter(job => `${job.title} ${job.company} ${job.location}`.toLowerCase().includes(query));
-  if (!filtered.length) { root.innerHTML = '<div class="empty">Nenhuma vaga encontrada. Adicione a primeira acima.</div>'; return; }
+  if (!filtered.length) { root.innerHTML = '<div class="empty">Nenhuma vaga salva encontrada. Use a busca de vagas remotas acima ou adicione uma manualmente.</div>'; return; }
   const appliedJobIds = new Set(state.applications.map(app => app.job_id));
   root.innerHTML = filtered.map(job => {
     const salary = job.salary_min || job.salary_max ? ` · ${formatMoney(job.salary_min || 0)}–${formatMoney(job.salary_max || 0)}` : '';
@@ -227,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('registerForm').addEventListener('submit', register);
   $('profileForm').addEventListener('submit', saveProfile);
   $('jobForm').addEventListener('submit', createJob);
+  $('remoteSearchForm').addEventListener('submit', searchRemoteJobs);
   $('jobSearch').addEventListener('input', renderJobs);
   $('loginTab').addEventListener('click', () => setAuthTab('login'));
   $('registerTab').addEventListener('click', () => setAuthTab('register'));
