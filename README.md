@@ -1,30 +1,84 @@
-# JobFit API 🚀
+# JobFit 🚀
 
-Production-style backend for tracking job opportunities, applications, and profile-to-job compatibility.
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-ready-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)
 
-Built with **FastAPI, SQLAlchemy, PostgreSQL, JWT, Docker, pytest, GitHub Actions, and an interactive web dashboard**.
+**Dashboard full-stack para organizar vagas, acompanhar candidaturas e medir a compatibilidade entre o perfil técnico do usuário e os requisitos de cada oportunidade.**
 
-## Features
+> Portfolio project built with Python/FastAPI to demonstrate backend engineering, authentication, relational persistence, explainable matching, testing, CI and a functional web interface.
 
-- Interactive browser dashboard at `/`
-- JWT registration and login
-- Technical profile with skills
-- Job opportunity CRUD
-- Automatic profile-to-job match score
-- Application pipeline tracking
-- PostgreSQL or SQLite
-- Docker Compose
-- Automated tests
-- GitHub Actions CI
-- Swagger/OpenAPI documentation
+## ✨ O que o projeto faz
 
-## Why this project
+O JobFit permite criar uma conta, cadastrar suas skills, salvar oportunidades e acompanhar o processo seletivo em um pipeline visual. Cada vaga recebe um **match score explicável**, com skills compatíveis e skills que ainda faltam no perfil.
 
-Job seekers often lose track of applications and apply blindly to roles that do not match their current skills. JobFit centralizes opportunities and gives each saved job a deterministic compatibility score based on the user's technical profile.
+A interface web consome a própria API FastAPI — não é apenas uma tela estática. Login, perfil, vagas, scores e candidaturas usam os endpoints reais do backend.
 
-The project now includes a visual dashboard so recruiters and reviewers can understand the core idea immediately without needing to start with raw API requests.
+### Principais recursos
 
-## Architecture
+- autenticação JWT com Bearer Token;
+- isolamento dos dados por usuário;
+- perfil técnico editável;
+- cadastro, listagem, exclusão e reavaliação de vagas;
+- match score baseado em skills técnicas normalizadas;
+- explicação do score com `matched_skills` e `missing_skills`;
+- pipeline de candidatura: applied → screening → interview → technical → offer/rejected;
+- dashboard responsivo integrado à API;
+- SQLite para desenvolvimento e PostgreSQL via Docker Compose;
+- documentação automática Swagger/OpenAPI;
+- testes automatizados com pytest;
+- CI com GitHub Actions;
+- ambiente Codespaces/devcontainer com Python 3.12.
+
+## 🖥️ Dashboard
+
+Depois de iniciar a aplicação, abra:
+
+```text
+http://localhost:8000/
+```
+
+A interface permite realizar todo o fluxo principal sem precisar montar `curl` manualmente.
+
+A documentação técnica continua disponível em:
+
+```text
+http://localhost:8000/docs
+```
+
+## 🧠 Match explicável
+
+O motor de matching normaliza aliases técnicos — por exemplo `Postgres → PostgreSQL`, `JS → JavaScript` e `REST APIs → REST` — e prioriza termos reconhecidos como tecnologias.
+
+Exemplo de análise:
+
+```json
+{
+  "score": 75.0,
+  "matched_skills": ["fastapi", "postgresql", "python"],
+  "missing_skills": ["docker"],
+  "profile_skills": ["fastapi", "postgresql", "python"],
+  "required_skills": ["docker", "fastapi", "postgresql", "python"]
+}
+```
+
+Essa abordagem é propositalmente determinística, barata e explicável. Uma evolução futura pode incluir embeddings ou LLMs sem remover a camada interpretável atual.
+
+## 🏗️ Arquitetura
+
+```mermaid
+flowchart LR
+    U[Usuário] --> UI[Dashboard HTML/CSS/JS]
+    UI --> API[FastAPI]
+    API --> AUTH[JWT Auth]
+    API --> MATCH[Matching Engine]
+    API --> ORM[SQLAlchemy]
+    ORM --> DB[(SQLite / PostgreSQL)]
+    CI[GitHub Actions] --> TESTS[pytest]
+    TESTS --> API
+```
 
 ```text
 app/
@@ -34,89 +88,108 @@ app/
 ├── schemas.py
 ├── security.py
 ├── dependencies.py
-├── static/
-│   └── index.html
 ├── routers/
 │   ├── auth.py
 │   ├── profile.py
 │   ├── jobs.py
 │   └── applications.py
-└── services/
-    └── matching.py
+├── services/
+│   └── matching.py
+└── static/
+    ├── index.html
+    ├── styles.css
+    └── app.js
 ```
 
-## Quick start
+## 🚀 Executar localmente
 
 ```bash
+git clone https://github.com/rodrigo-srf/jobfit-api.git
+cd jobfit-api
 python -m venv .venv
 source .venv/bin/activate
 # Windows: .venv\Scripts\activate
-
 python -m pip install -r requirements.txt
 python -m uvicorn app.main:app --reload
 ```
 
-Open:
+Abra `http://localhost:8000/`.
 
-- Dashboard: `http://localhost:8000/`
-- Swagger API docs: `http://localhost:8000/docs`
-- Health check: `http://localhost:8000/health`
-
-## Interactive dashboard
-
-The root page provides a simple visual demonstration of the profile-to-job matching concept. Enter a skill set and a job's requirements, then calculate an explainable compatibility score directly in the browser.
-
-The backend remains available through the REST API for authentication, persistent job storage, application tracking, and database operations.
-
-## Docker + PostgreSQL
+## 🐳 Docker + PostgreSQL
 
 ```bash
 docker compose up --build
 ```
 
-## Main endpoints
+A API ficará disponível na porta `8000` e usará PostgreSQL pelo serviço `db` do Compose.
 
-| Method | Endpoint | Purpose |
+## ☁️ GitHub Codespaces
+
+O repositório inclui `.devcontainer/devcontainer.json`. Ao criar um Codespace, o ambiente usa Python 3.12, cria `.venv` e instala as dependências automaticamente.
+
+Depois:
+
+```bash
+source .venv/bin/activate
+python -m uvicorn app.main:app --reload --host 0.0.0.0
+```
+
+Abra a porta encaminhada `8000`.
+
+## 🔌 Endpoints principais
+
+| Método | Endpoint | Função |
 |---|---|---|
-| GET | `/` | Interactive dashboard |
-| POST | `/auth/register` | Create account |
-| POST | `/auth/login` | Receive JWT |
-| GET/PUT | `/profile` | Read/update profile |
-| POST/GET | `/jobs` | Save/list jobs |
-| POST | `/jobs/{id}/rescore` | Recalculate fit |
-| POST/GET | `/applications` | Create/list applications |
-| PATCH | `/applications/{id}` | Update application stage |
+| POST | `/auth/register` | Criar conta |
+| POST | `/auth/login` | Gerar JWT |
+| GET/PUT | `/profile` | Ler/atualizar perfil |
+| POST/GET | `/jobs` | Salvar/listar vagas |
+| GET | `/jobs/{id}/analysis` | Explicar compatibilidade |
+| POST | `/jobs/{id}/rescore` | Recalcular score |
+| DELETE | `/jobs/{id}` | Excluir vaga |
+| POST/GET | `/applications` | Criar/listar candidaturas |
+| PATCH | `/applications/{id}` | Atualizar etapa |
 | GET | `/health` | Health check |
+| GET | `/api` | Metadados da API |
 
-## Match engine
-
-The first version intentionally uses deterministic token matching instead of a paid LLM. Skills and job text are normalized and aliases such as `Postgres → PostgreSQL` are handled before overlap is calculated.
-
-That makes the service cheap, explainable, and easy to test. A later version can add embeddings or an LLM explanation layer.
-
-## Tests
+## 🧪 Testes
 
 ```bash
 pytest -q
 ```
 
-## Roadmap
+Os testes cobrem health check, disponibilidade do dashboard e comportamento do motor de matching, incluindo aliases e skills ausentes.
 
-- Alembic migrations
-- semantic embeddings
-- LLM explanation of match score
-- filters by salary, seniority, and remote location
-- follow-up reminders
-- CSV export
-- richer dashboard connected to authenticated user data
-- email import
-- refresh tokens
+## 🔐 Configuração
 
-## What this demonstrates
+Copie `.env.example` e altere os valores antes de uso fora de desenvolvimento:
 
-Backend API design, authentication, authorization, relational modeling, business logic, testing, containerization, CI/CD fundamentals, applied text matching, and a lightweight interactive frontend.
+```bash
+cp .env.example .env
+```
 
-## Author
+Em produção, use um `SECRET_KEY` forte e um banco PostgreSQL gerenciado.
 
-Rodrigo Serafim  
-https://github.com/rodrigo-srf
+## 🛣️ Próximas evoluções
+
+- Alembic para migrations;
+- refresh tokens;
+- filtros avançados por salário, senioridade e modalidade;
+- importação de vagas por URL;
+- lembretes de follow-up;
+- exportação CSV;
+- embeddings para comparação semântica;
+- testes de integração completos com banco isolado;
+- deploy público contínuo.
+
+## 🎯 O que este projeto demonstra
+
+**Python backend development · FastAPI · REST API design · JWT authentication · authorization · SQLAlchemy · PostgreSQL · Docker · pytest · CI/CD fundamentals · frontend/API integration · explainable text matching.**
+
+## Autor
+
+**Rodrigo Serafim**  
+GitHub: https://github.com/rodrigo-srf  
+LinkedIn: https://www.linkedin.com/in/rodrigo-srf
+
+MIT License.
