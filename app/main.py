@@ -5,16 +5,16 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.database import Base, engine
-from app.routers import applications, auth, jobs, profile, stats
+from app.routers import applications, auth, discovery, jobs, profile, stats
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="JobFit API",
-    version="2.0.0",
+    version="2.1.0",
     description=(
-        "Full-stack portfolio API for tracking jobs, applications and explainable "
-        "profile-to-job compatibility."
+        "Full-stack portfolio API for tracking jobs, applications, remote job discovery "
+        "and explainable profile-to-job compatibility."
     ),
 )
 
@@ -23,6 +23,7 @@ app.include_router(profile.router)
 app.include_router(jobs.router)
 app.include_router(applications.router)
 app.include_router(stats.router)
+app.include_router(discovery.router)
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -46,4 +47,5 @@ def api_info():
         "docs": "/docs",
         "dashboard": "/",
         "health": "/health",
+        "job_discovery": "/discover/jobs?q=python",
     }
