@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="JobFit — dashboard full-stack para descobrir vagas remotas, acompanhar candidaturas e medir compatibilidade de perfil técnico.">
+  <meta name="description" content="JobFit — dashboard full-stack para descobrir vagas, acompanhar candidaturas e medir compatibilidade de perfil técnico.">
   <title>JobFit · Career Dashboard</title>
   <link rel="stylesheet" href="/static/styles.css">
 </head>
@@ -18,7 +18,7 @@
       <div class="hero-card">
         <div class="eyebrow">Python · FastAPI · PostgreSQL · JWT · Docker</div>
         <h2>Descubra vagas, compare com seu perfil e acompanhe suas candidaturas.</h2>
-        <p id="welcome">API + dashboard full-stack para encontrar oportunidades remotas e organizar o processo seletivo.</p>
+        <p id="welcome">API + dashboard full-stack para encontrar oportunidades e organizar o processo seletivo.</p>
         <div id="notice" class="notice hidden"></div>
       </div>
       <div class="hero-card hero-stats">
@@ -33,16 +33,23 @@
       <article class="card span-12">
         <div class="toolbar remote-toolbar">
           <div>
-            <h3 style="margin-bottom:4px">🔎 Descobrir vagas remotas</h3>
-            <span class="muted">Busca oportunidades reais publicadas na Remotive. Você pode pesquisar mesmo sem login.</span>
+            <h3 style="margin-bottom:4px">🔎 Descobrir vagas</h3>
+            <span class="muted">Pesquisa em múltiplas fontes públicas e permite salvar as melhores oportunidades no seu workspace.</span>
           </div>
-          <form id="remoteSearchForm" class="remote-search">
-            <input id="remoteQuery" value="Python Backend" placeholder="Python, FastAPI, Backend, AI..." minlength="2" required>
-            <button class="btn primary" type="submit">Buscar vagas</button>
-          </form>
         </div>
-        <div id="remoteJobs" class="jobs"><div class="empty">Pesquise uma tecnologia ou cargo para buscar oportunidades remotas.</div></div>
-        <p class="source-note">Fonte das vagas: <a href="https://remotive.com/" target="_blank" rel="noopener noreferrer">Remotive</a>. As vagas externas abrem na página original da fonte.</p>
+        <form id="remoteSearchForm" class="discovery-form">
+          <div class="field grow"><label>Palavra-chave</label><input id="remoteQuery" value="Python Backend" placeholder="Python, FastAPI, Backend, AI..."></div>
+          <div class="field"><label>Fonte</label><select id="remoteSource"><option value="all">Todas</option><option value="remotive">Remotive</option><option value="arbeitnow">Arbeitnow</option></select></div>
+          <div class="field"><label>Localização</label><input id="remoteLocation" placeholder="Worldwide, Brazil, Europe..."></div>
+          <div class="field"><label>Categoria</label><input id="remoteCategory" placeholder="Software, AI, Data..."></div>
+          <div class="field"><label>Tipo</label><input id="remoteType" placeholder="full-time, freelance..."></div>
+          <div class="field"><label>Ordenar</label><select id="remoteSort"><option value="recent">Mais recentes</option><option value="match">Melhor match</option><option value="company">Empresa</option><option value="title">Cargo</option></select></div>
+          <label class="check"><input id="remoteOnly" type="checkbox" checked> Somente remoto</label>
+          <button class="btn primary" type="submit">Buscar vagas</button>
+        </form>
+        <div class="discovery-summary"><span id="remoteCount" class="muted">Pesquise uma tecnologia ou cargo.</span><button id="showFavoritesBtn" class="btn small" type="button">★ Ver favoritas</button></div>
+        <div id="remoteJobs" class="jobs"><div class="empty">Pesquise uma tecnologia ou cargo para buscar oportunidades.</div></div>
+        <p class="source-note">Fontes: <a href="https://remotive.com/" target="_blank" rel="noopener noreferrer">Remotive</a> e <a href="https://www.arbeitnow.com/" target="_blank" rel="noopener noreferrer">Arbeitnow</a>. As candidaturas são feitas na página original da vaga.</p>
       </article>
     </section>
 
@@ -74,8 +81,8 @@
 
       <article class="card span-7">
         <h3>O que este projeto demonstra</h3>
-        <p class="muted">Descoberta de vagas via API externa, autenticação JWT, autorização por usuário, persistência relacional, análise explicável de skills, CRUD de vagas, pipeline de candidaturas, testes, CI e containerização.</p>
-        <div class="chips"><span class="chip">FastAPI</span><span class="chip">SQLAlchemy</span><span class="chip">PostgreSQL</span><span class="chip">JWT</span><span class="chip">External API</span><span class="chip">Docker</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div>
+        <p class="muted">Agregação de APIs externas, filtros, favoritos, autenticação JWT, autorização por usuário, persistência relacional, matching explicável, CRUD de vagas, pipeline de candidaturas, testes, CI e containerização.</p>
+        <div class="chips"><span class="chip">FastAPI</span><span class="chip">SQLAlchemy</span><span class="chip">PostgreSQL</span><span class="chip">JWT</span><span class="chip">External APIs</span><span class="chip">Docker</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div>
       </article>
     </section>
 
