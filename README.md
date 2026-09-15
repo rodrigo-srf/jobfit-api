@@ -31,7 +31,8 @@ A interface web consome a própria API FastAPI — não é apenas uma tela está
 - documentação automática Swagger/OpenAPI;
 - testes unitários e fluxo end-to-end autenticado com pytest;
 - CI com GitHub Actions;
-- ambiente Codespaces/devcontainer com Python 3.12.
+- ambiente Codespaces/devcontainer com Python 3.12;
+- blueprint `render.yaml` para deploy com PostgreSQL.
 
 ## 🖥️ Dashboard
 
@@ -137,6 +138,12 @@ python -m uvicorn app.main:app --reload --host 0.0.0.0
 ```
 
 Abra a porta encaminhada `8000`.
+
+## 🌍 Deploy
+
+O arquivo `render.yaml` deixa o projeto preparado para um Blueprint no Render com serviço Docker + PostgreSQL. O backend também normaliza URLs `postgres://` e `postgresql://` para o driver psycopg 3 automaticamente.
+
+No deploy, mantenha `SECRET_KEY` como segredo gerado pelo provedor e use `/health` como health check.
 
 ## 🔌 Endpoints principais
 
