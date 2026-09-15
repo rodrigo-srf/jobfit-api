@@ -1,15 +1,94 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JobFit Dashboard</title>
-<style>body{font-family:Arial,sans-serif;background:#0f172a;color:#e2e8f0;margin:0}.wrap{max-width:1000px;margin:auto;padding:24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:#111827;border:1px solid #334155;border-radius:16px;padding:18px}input,textarea{width:100%;box-sizing:border-box;margin:6px 0 12px;padding:10px;border-radius:8px;border:1px solid #475569;background:#0f172a;color:white}button{padding:10px 14px;border:0;border-radius:8px;background:#60a5fa;color:#07111f;font-weight:700;cursor:pointer}.muted{color:#94a3b8}.score{font-size:34px;color:#5eead4;font-weight:800}.full{grid-column:1/-1}@media(max-width:800px){.grid{grid-template-columns:1fr}}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="JobFit — dashboard full-stack para acompanhar vagas, candidaturas e compatibilidade de perfil técnico.">
+  <title>JobFit · Career Dashboard</title>
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body><div class="wrap"><h1>JobFit</h1><p class="muted">Interactive portfolio dashboard for profile-to-job matching.</p><div class="grid">
-<div class="card"><h2>Your profile</h2><textarea id="skills">Python FastAPI PostgreSQL Docker AWS SQL REST APIs Git Linux Machine Learning</textarea></div>
-<div class="card"><h2>Job requirements</h2><textarea id="requirements">Python FastAPI PostgreSQL Docker AWS SQL REST APIs Git</textarea></div>
-<div class="card"><h2>Match score</h2><div id="score" class="score">0%</div><button onclick="calculate()">Calculate match</button></div>
-<div class="card"><h2>Portfolio demo</h2><p class="muted">This dashboard demonstrates the matching concept visually. The production API, authentication, database models and application tracking are available in the backend.</p><p><a href="/docs" style="color:#93c5fd">Open interactive API documentation</a></p></div>
-<div class="card full"><h2>How it works</h2><p class="muted">Skills and job requirements are normalized, compared and converted into an explainable compatibility score. The backend also supports JWT authentication, saved jobs and application stages.</p></div>
-</div></div>
-<script>function words(s){return new Set(s.toLowerCase().match(/[a-z0-9+#.-]+/g)||[])}function calculate(){const a=words(document.getElementById('skills').value);const b=words(document.getElementById('requirements').value);let hit=0;b.forEach(x=>{if(a.has(x))hit++});document.getElementById('score').textContent=(b.size?hit/b.size*100:0).toFixed(1)+'%'}</script>
-</body></html>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="logo">JF</div><div><h1>JobFit</h1><small>Career intelligence dashboard</small></div></div>
+      <div class="top-actions"><a class="btn" href="/docs" target="_blank">API Docs</a><a class="btn" href="https://github.com/rodrigo-srf/jobfit-api" target="_blank">GitHub</a><button id="logoutBtn" class="btn danger hidden">Sair</button></div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Python · FastAPI · PostgreSQL · JWT · Docker</div>
+        <h2>Organize suas vagas e veja onde seu perfil encaixa melhor.</h2>
+        <p id="welcome">API + dashboard full-stack para acompanhar vagas e candidaturas.</p>
+        <div id="notice" class="notice hidden"></div>
+      </div>
+      <div class="hero-card hero-stats">
+        <div class="stat"><strong id="statJobs">0</strong><span>vagas salvas</span></div>
+        <div class="stat"><strong id="statApps">0</strong><span>candidaturas</span></div>
+        <div class="stat"><strong id="statInterviews">0</strong><span>em entrevista</span></div>
+        <div class="stat"><strong id="statScore">0%</strong><span>match médio</span></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article id="authCard" class="card span-5">
+        <h3>Acessar workspace</h3>
+        <div class="auth-tabs"><button id="loginTab" class="btn small active">Entrar</button><button id="registerTab" class="btn small">Criar conta</button></div>
+        <form id="loginForm">
+          <div class="field"><label>E-mail</label><input id="loginEmail" type="email" value="teste@jobfit.dev" required></div>
+          <div class="field"><label>Senha</label><input id="loginPassword" type="password" value="12345678" required></div>
+          <button class="btn primary" type="submit">Entrar no JobFit</button>
+        </form>
+        <form id="registerForm" class="hidden">
+          <div class="field"><label>Nome</label><input id="regName" required minlength="2" placeholder="Seu nome"></div>
+          <div class="field"><label>E-mail</label><input id="regEmail" type="email" required placeholder="voce@email.com"></div>
+          <div class="field"><label>Senha</label><input id="regPassword" type="password" required minlength="8" placeholder="mínimo 8 caracteres"></div>
+          <button class="btn primary" type="submit">Criar conta</button>
+        </form>
+      </article>
+
+      <article id="profileCard" class="card span-5 hidden">
+        <h3>Seu perfil técnico</h3>
+        <form id="profileForm">
+          <div class="field"><label>Skills</label><textarea id="skills" placeholder="Python, FastAPI, PostgreSQL, Docker, AWS..."></textarea></div>
+          <div class="field"><label>Resumo</label><textarea id="summary" placeholder="Backend developer focado em APIs, automação e IA."></textarea></div>
+          <button class="btn primary" type="submit">Salvar e recalcular scores</button>
+        </form>
+      </article>
+
+      <article class="card span-7">
+        <h3>O que este projeto demonstra</h3>
+        <p class="muted">Autenticação JWT, autorização por usuário, persistência relacional, análise explicável de skills, CRUD de vagas, pipeline de candidaturas, API documentada, testes, CI e containerização.</p>
+        <div class="chips"><span class="chip">FastAPI</span><span class="chip">SQLAlchemy</span><span class="chip">PostgreSQL</span><span class="chip">JWT</span><span class="chip">Docker</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div>
+      </article>
+    </section>
+
+    <section id="workspace" class="grid hidden" style="margin-top:16px">
+      <article class="card span-4">
+        <h3>Adicionar vaga</h3>
+        <form id="jobForm">
+          <div class="field"><label>Cargo</label><input id="jobTitle" required placeholder="Python Backend Developer"></div>
+          <div class="field"><label>Empresa</label><input id="jobCompany" required placeholder="Empresa"></div>
+          <div class="field"><label>Localização</label><input id="jobLocation" value="Remote"></div>
+          <div class="field"><label>Descrição</label><textarea id="jobDescription" required placeholder="Responsabilidades da vaga..."></textarea></div>
+          <div class="field"><label>Requisitos</label><textarea id="jobRequirements" placeholder="Python, FastAPI, PostgreSQL, Docker..."></textarea></div>
+          <div class="row"><div class="field"><label>Salário mín.</label><input id="salaryMin" type="number" min="0"></div><div class="field"><label>Salário máx.</label><input id="salaryMax" type="number" min="0"></div></div>
+          <button class="btn primary" type="submit">Salvar vaga + calcular match</button>
+        </form>
+      </article>
+
+      <article class="card span-8">
+        <div class="toolbar"><div><h3 style="margin-bottom:4px">Vagas salvas</h3><span class="muted">Ordenadas pelo melhor match.</span></div><input id="jobSearch" placeholder="Buscar cargo, empresa ou local"></div>
+        <div id="jobsList" class="jobs"></div>
+      </article>
+
+      <article class="card span-12">
+        <div class="toolbar"><div><h3 style="margin-bottom:4px">Pipeline de candidaturas</h3><span class="muted">Atualize a etapa diretamente no cartão.</span></div></div>
+        <div id="pipeline" class="pipeline"></div>
+      </article>
+    </section>
+
+    <footer class="footer">Projeto de portfólio por Rodrigo Serafim · <a href="/docs">Swagger/OpenAPI</a> · <a href="/health">Health check</a></footer>
+  </main>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
