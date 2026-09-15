@@ -11,9 +11,9 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="JobFit API",
-    version="2.1.0",
+    version="2.2.0",
     description=(
-        "Full-stack portfolio API for tracking jobs, applications, remote job discovery "
+        "Full-stack portfolio API for tracking jobs, applications, multi-source job discovery "
         "and explainable profile-to-job compatibility."
     ),
 )
@@ -47,5 +47,6 @@ def api_info():
         "docs": "/docs",
         "dashboard": "/",
         "health": "/health",
-        "job_discovery": "/discover/jobs?q=python",
+        "job_discovery": "/discover/jobs?q=python&source=all",
+        "job_sources": ["Remotive", "Arbeitnow"],
     }
