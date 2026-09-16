@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <rect width="1400" height="760" fill="#08111f"/>
+  <rect x="45" y="45" width="1310" height="670" rx="24" fill="#0f1b2d" stroke="#223753"/>
+  <text x="80" y="105" fill="#e8eef7" font-family="Arial, sans-serif" font-size="34" font-weight="700">JobFit — Pipeline de candidaturas</text>
+  <text x="80" y="145" fill="#93a4bb" font-family="Arial, sans-serif" font-size="20">Acompanhe cada candidatura do envio até a oferta</text>
+
+  <g font-family="Arial, sans-serif">
+    <g transform="translate(70,205)">
+      <rect width="195" height="410" rx="18" fill="#0a1627" stroke="#223753"/>
+      <text x="20" y="38" fill="#e8eef7" font-size="20" font-weight="700">applied</text>
+      <rect x="16" y="62" width="163" height="115" rx="12" fill="#101f33"/>
+      <text x="30" y="92" fill="#e8eef7" font-size="16" font-weight="700">Python Backend</text>
+      <text x="30" y="116" fill="#93a4bb" font-size="14">Example Tech</text>
+      <rect x="30" y="133" width="120" height="28" rx="8" fill="#081525" stroke="#223753"/>
+      <text x="43" y="152" fill="#c7d5e7" font-size="13">applied ▾</text>
+    </g>
+    <g transform="translate(285,205)">
+      <rect width="195" height="410" rx="18" fill="#0a1627" stroke="#223753"/>
+      <text x="20" y="38" fill="#e8eef7" font-size="20" font-weight="700">screening</text>
+    </g>
+    <g transform="translate(500,205)">
+      <rect width="195" height="410" rx="18" fill="#0a1627" stroke="#223753"/>
+      <text x="20" y="38" fill="#e8eef7" font-size="20" font-weight="700">interview</text>
+      <rect x="16" y="62" width="163" height="115" rx="12" fill="#101f33"/>
+      <text x="30" y="92" fill="#e8eef7" font-size="16" font-weight="700">API Developer</text>
+      <text x="30" y="116" fill="#93a4bb" font-size="14">Remote Co.</text>
+      <rect x="30" y="133" width="120" height="28" rx="8" fill="#081525" stroke="#223753"/>
+      <text x="43" y="152" fill="#c7d5e7" font-size="13">interview ▾</text>
+    </g>
+    <g transform="translate(715,205)">
+      <rect width="195" height="410" rx="18" fill="#0a1627" stroke="#223753"/>
+      <text x="20" y="38" fill="#e8eef7" font-size="20" font-weight="700">technical</text>
+    </g>
+    <g transform="translate(930,205)">
+      <rect width="195" height="410" rx="18" fill="#0a1627" stroke="#223753"/>
+      <text x="20" y="38" fill="#e8eef7" font-size="20" font-weight="700">offer</text>
+    </g>
+    <g transform="translate(1145,205)">
+      <rect width="195" height="410" rx="18" fill="#0a1627" stroke="#223753"/>
+      <text x="20" y="38" fill="#e8eef7" font-size="20" font-weight="700">rejected</text>
+    </g>
+  </g>
+
+  <text x="80" y="665" fill="#93a4bb" font-family="Arial, sans-serif" font-size="16">Visual preview baseada no pipeline real da aplicação.</text>
+</svg>
