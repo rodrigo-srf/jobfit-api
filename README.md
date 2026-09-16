@@ -2,16 +2,38 @@
 
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-ready-4169E1?logo=postgresql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-production-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)
+![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-46E3B7?logo=render&logoColor=white)
 
 **Dashboard full-stack para descobrir vagas, comparar oportunidades com seu perfil técnico e acompanhar candidaturas em um único lugar.**
 
-**Live demo:** https://jobfit-api-rodrigo.onrender.com  
-**API docs:** https://jobfit-api-rodrigo.onrender.com/docs
+### 🌐 [Abrir Live Demo](https://jobfit-api-rodrigo.onrender.com) · [Swagger / OpenAPI](https://jobfit-api-rodrigo.onrender.com/docs)
 
 > Portfolio project built with Python/FastAPI to demonstrate backend engineering, authentication, external API aggregation, explainable matching, relational persistence, testing, CI and frontend/API integration.
+
+## 🖥️ Prévia visual
+
+### Descoberta de vagas remotas
+
+![Job discovery preview](docs/job-discovery.svg)
+
+Busca em múltiplas fontes, filtros, favoritos, link para a vaga original e salvamento no workspace.
+
+### Match explicável
+
+![Match analysis preview](docs/match-analysis.svg)
+
+Cada oportunidade recebe um score interpretável, com separação entre skills compatíveis e skills ausentes.
+
+### Pipeline de candidaturas
+
+![Application pipeline preview](docs/application-pipeline.svg)
+
+A candidatura pode avançar entre `applied`, `screening`, `interview`, `technical`, `offer` e `rejected` diretamente no dashboard.
+
+> As imagens acima são **prévias visuais fiéis à interface real**, criadas para apresentar os principais fluxos do projeto no GitHub. A aplicação funcional está disponível na Live Demo.
 
 ## ✨ Principais recursos
 
@@ -30,7 +52,7 @@
 - pipeline de candidatura: applied → screening → interview → technical → offer/rejected;
 - estatísticas autenticadas do workspace;
 - dashboard responsivo consumindo a própria API FastAPI;
-- SQLite em desenvolvimento e PostgreSQL preparado para produção;
+- SQLite em desenvolvimento e **PostgreSQL persistente em produção no Render**;
 - Docker, Codespaces, Swagger/OpenAPI, pytest e GitHub Actions.
 
 ## 🔎 Descoberta de vagas
@@ -121,6 +143,14 @@ Swagger: `http://localhost:8000/docs`
 ```bash
 docker compose up --build
 ```
+
+## ☁️ Deploy em produção
+
+O projeto está publicado no Render com PostgreSQL persistente e deploy ligado à branch `main`.
+
+- **Aplicação:** https://jobfit-api-rodrigo.onrender.com
+- **Documentação:** https://jobfit-api-rodrigo.onrender.com/docs
+- **Health check:** https://jobfit-api-rodrigo.onrender.com/health
 
 ## 🔌 Endpoints principais
 
