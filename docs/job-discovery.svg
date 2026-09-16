@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <rect width="1400" height="760" fill="#08111f"/>
+  <rect x="45" y="45" width="1310" height="670" rx="24" fill="#0f1b2d" stroke="#223753"/>
+  <text x="80" y="105" fill="#e8eef7" font-family="Arial, sans-serif" font-size="34" font-weight="700">JobFit — Descobrir vagas remotas</text>
+  <text x="80" y="145" fill="#93a4bb" font-family="Arial, sans-serif" font-size="20">Remotive + Arbeitnow · filtros · favoritos · match rápido</text>
+
+  <rect x="80" y="185" width="430" height="56" rx="12" fill="#081525" stroke="#223753"/>
+  <text x="102" y="220" fill="#e8eef7" font-family="Arial, sans-serif" font-size="20">Python Backend</text>
+  <rect x="525" y="185" width="170" height="56" rx="12" fill="#67a7ff"/>
+  <text x="566" y="220" fill="#07111f" font-family="Arial, sans-serif" font-size="19" font-weight="700">Buscar vagas</text>
+
+  <g transform="translate(80,280)">
+    <rect width="1240" height="150" rx="18" fill="#0a1627" stroke="#223753"/>
+    <text x="28" y="42" fill="#e8eef7" font-family="Arial, sans-serif" font-size="25" font-weight="700">Python Backend Engineer</text>
+    <text x="28" y="76" fill="#93a4bb" font-family="Arial, sans-serif" font-size="18">Remote Tech · Worldwide · Full-time · publicado recentemente</text>
+    <rect x="1048" y="24" width="156" height="42" rx="21" fill="#132f39" stroke="#1e5961"/>
+    <text x="1090" y="51" fill="#5eead4" font-family="Arial, sans-serif" font-size="18" font-weight="700">84% match</text>
+    <text x="28" y="112" fill="#c7d5e7" font-family="Arial, sans-serif" font-size="17">Python · FastAPI · PostgreSQL · Docker · REST APIs</text>
+    <rect x="28" y="122" width="175" height="38" rx="10" fill="#132238" stroke="#223753"/>
+    <text x="49" y="147" fill="#e8eef7" font-family="Arial, sans-serif" font-size="16">Ver vaga original</text>
+    <rect x="217" y="122" width="165" height="38" rx="10" fill="#34d399"/>
+    <text x="244" y="147" fill="#052014" font-family="Arial, sans-serif" font-size="16" font-weight="700">Salvar no JobFit</text>
+  </g>
+
+  <g transform="translate(80,458)">
+    <rect width="1240" height="150" rx="18" fill="#0a1627" stroke="#223753"/>
+    <text x="28" y="42" fill="#e8eef7" font-family="Arial, sans-serif" font-size="25" font-weight="700">Junior Backend Developer</text>
+    <text x="28" y="76" fill="#93a4bb" font-family="Arial, sans-serif" font-size="18">Cloud Systems · Remote · Europe / LATAM</text>
+    <rect x="1048" y="24" width="156" height="42" rx="21" fill="#132f39" stroke="#1e5961"/>
+    <text x="1090" y="51" fill="#5eead4" font-family="Arial, sans-serif" font-size="18" font-weight="700">72% match</text>
+    <text x="28" y="112" fill="#c7d5e7" font-family="Arial, sans-serif" font-size="17">Python · SQL · Git · Linux · AWS</text>
+    <rect x="28" y="122" width="175" height="38" rx="10" fill="#132238" stroke="#223753"/>
+    <text x="49" y="147" fill="#e8eef7" font-family="Arial, sans-serif" font-size="16">Ver vaga original</text>
+    <rect x="217" y="122" width="165" height="38" rx="10" fill="#34d399"/>
+    <text x="244" y="147" fill="#052014" font-family="Arial, sans-serif" font-size="16" font-weight="700">Salvar no JobFit</text>
+  </g>
+
+  <text x="80" y="665" fill="#93a4bb" font-family="Arial, sans-serif" font-size="16">Visual preview baseada na interface real do projeto.</text>
+</svg>
