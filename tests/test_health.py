@@ -11,7 +11,15 @@ def test_health():
     payload = response.json()
     assert payload["status"] == "ok"
     assert payload["service"] == "jobfit-api"
-    assert payload["version"] == "2.0.0"
+    assert payload["version"] == "2.2.0"
+    assert response.headers["X-Request-ID"]
+    assert float(response.headers["X-Response-Time-Ms"]) >= 0
+
+
+def test_readiness_checks_database():
+    response = client.get("/ready")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready", "database": "reachable"}
 
 
 def test_dashboard_is_available():

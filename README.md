@@ -5,6 +5,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-production-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)
+![CI](https://github.com/rodrigo-srf/jobfit-api/actions/workflows/ci.yml/badge.svg)
 ![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-46E3B7?logo=render&logoColor=white)
 
 **Dashboard full-stack para descobrir vagas, comparar oportunidades com seu perfil técnico e acompanhar candidaturas em um único lugar.**
@@ -53,7 +54,10 @@ A candidatura pode avançar entre `applied`, `screening`, `interview`, `technica
 - estatísticas autenticadas do workspace;
 - dashboard responsivo consumindo a própria API FastAPI;
 - SQLite em desenvolvimento e **PostgreSQL persistente em produção no Render**;
-- Docker, Codespaces, Swagger/OpenAPI, pytest e GitHub Actions.
+- Docker executado com usuário não privilegiado, Compose com health checks, Swagger/OpenAPI, pytest e GitHub Actions;
+- rastreamento de requisições com `X-Request-ID`, tempo de resposta e logs operacionais sem dados sensíveis;
+- verificações separadas de liveness (`/health`) e readiness do banco (`/ready`);
+- auditoria de dependências, build do contêiner no CI e atualizações automatizadas com Dependabot.
 
 ## 🔎 Descoberta de vagas
 
@@ -97,6 +101,8 @@ flowchart LR
     API --> ORM[SQLAlchemy]
     ORM --> DB[(SQLite / PostgreSQL)]
     CI[GitHub Actions] --> TESTS[pytest]
+    CI --> AUDIT[Dependency Audit]
+    CI --> IMAGE[Container Build]
     TESTS --> API
 ```
 
@@ -151,6 +157,9 @@ O projeto está publicado no Render com PostgreSQL persistente e deploy ligado �
 - **Aplicação:** https://jobfit-api-rodrigo.onrender.com
 - **Documentação:** https://jobfit-api-rodrigo.onrender.com/docs
 - **Health check:** https://jobfit-api-rodrigo.onrender.com/health
+- **Readiness:** https://jobfit-api-rodrigo.onrender.com/ready
+
+O guia de operação, validação pós-deploy e rollback está em [`docs/OPERATIONS.md`](docs/OPERATIONS.md).
 
 ## 🔌 Endpoints principais
 
@@ -168,6 +177,7 @@ O projeto está publicado no Render com PostgreSQL persistente e deploy ligado �
 | PATCH | `/applications/{id}` | Atualizar etapa |
 | GET | `/stats` | Estatísticas do usuário |
 | GET | `/health` | Health check |
+| GET | `/ready` | Verificar conexão com o banco |
 
 ## 🧪 Testes e CI
 
@@ -175,7 +185,7 @@ O projeto está publicado no Render com PostgreSQL persistente e deploy ligado �
 pytest -q
 ```
 
-A suíte cobre health check, matching, helpers de descoberta e fluxo autenticado end-to-end. O GitHub Actions executa verificação de compilação e testes a cada push/PR.
+A suíte cobre liveness/readiness, matching, helpers de descoberta e fluxo autenticado end-to-end. O GitHub Actions executa compilação, testes, auditoria de dependências e build limpo do contêiner a cada push/PR.
 
 ## 🔐 Configuração
 
@@ -197,7 +207,7 @@ Nunca publique o `SECRET_KEY`. Consulte `SECURITY.md` para orientações adicion
 
 ## 🎯 O que este projeto demonstra
 
-**Python backend development · FastAPI · REST API design · external API aggregation · JWT authentication · authorization · SQLAlchemy · PostgreSQL · Docker · pytest · CI/CD · frontend/API integration · explainable matching.**
+**Python backend development · FastAPI · REST API design · external API aggregation · JWT authentication · authorization · SQLAlchemy · PostgreSQL · Docker · container hardening · pytest · CI/CD · dependency auditing · health checks · request tracing · operational documentation · frontend/API integration · explainable matching.**
 
 ## Autor
 

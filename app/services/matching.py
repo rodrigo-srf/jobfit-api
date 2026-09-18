@@ -34,8 +34,13 @@ TECH_SKILLS = {
 
 def normalize(text: str) -> set[str]:
     text = (text or "").lower()
-    for alias, canonical in ALIASES.items():
-        text = text.replace(alias, canonical)
+    # Match aliases as complete terms. Plain string replacement turned
+    # "postgresql" into "postgresqlql" and "python" into "pythonthon" because
+    # shorter aliases such as "postgres" and "py" also occurred inside the
+    # canonical skill names.
+    for alias, canonical in sorted(ALIASES.items(), key=lambda item: len(item[0]), reverse=True):
+        pattern = rf"(?<![a-z0-9+#.\-]){re.escape(alias)}(?![a-z0-9+#.\-])"
+        text = re.sub(pattern, canonical, text)
     tokens = re.findall(r"[a-z0-9+#.\-]+", text)
     return {token for token in tokens if len(token) > 1 and token not in STOPWORDS}
 

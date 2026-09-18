@@ -10,6 +10,11 @@ from app.services.matching import analyze_match, calculate_match_score
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 
+def _matching_text(title: str, description: str, requirements: str) -> str:
+    """Prefer explicit requirements and fall back to the full job text."""
+    return requirements.strip() or f"{title} {description}"
+
+
 def _get_owned_job(job_id: int, db: Session, current_user: User) -> Job:
     job = db.query(Job).filter(Job.id == job_id, Job.owner_id == current_user.id).first()
     if not job:
@@ -26,7 +31,7 @@ def create_job(
     if payload.salary_min is not None and payload.salary_max is not None and payload.salary_min > payload.salary_max:
         raise HTTPException(status_code=422, detail="salary_min cannot be greater than salary_max")
 
-    text = f"{payload.title} {payload.description} {payload.requirements}"
+    text = _matching_text(payload.title, payload.description, payload.requirements)
     job = Job(
         **payload.model_dump(),
         owner_id=current_user.id,
@@ -66,7 +71,7 @@ def get_job_analysis(
     job = _get_owned_job(job_id, db, current_user)
     return analyze_match(
         current_user.skills,
-        f"{job.title} {job.description} {job.requirements}",
+        _matching_text(job.title, job.description, job.requirements),
     )
 
 
@@ -79,7 +84,7 @@ def rescore_job(
     job = _get_owned_job(job_id, db, current_user)
     job.match_score = calculate_match_score(
         current_user.skills,
-        f"{job.title} {job.description} {job.requirements}",
+        _matching_text(job.title, job.description, job.requirements),
     )
     db.commit()
     db.refresh(job)

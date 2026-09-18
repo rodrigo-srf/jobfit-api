@@ -15,6 +15,12 @@ def test_aliases_are_normalized():
     assert set(result["matched_skills"]) == {"python", "postgresql", "javascript"}
 
 
+def test_short_aliases_do_not_corrupt_canonical_names():
+    result = analyze_match("Python PostgreSQL", "Python PostgreSQL")
+    assert set(result["profile_skills"]) == {"python", "postgresql"}
+    assert result["score"] == 100.0
+
+
 def test_missing_skills_are_explained():
     result = analyze_match("Python, FastAPI", "Python FastAPI Docker AWS")
     assert result["score"] == 50.0
