@@ -1,7 +1,7 @@
 # JobFit 🚀
 
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.141.1-009688?logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-production-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)
@@ -12,7 +12,7 @@
 
 ### 🌐 [Abrir Live Demo](https://jobfit-api-rodrigo.onrender.com) · [Swagger / OpenAPI](https://jobfit-api-rodrigo.onrender.com/docs)
 
-> Portfolio project built with Python/FastAPI to demonstrate backend engineering, authentication, external API aggregation, explainable matching, relational persistence, testing, CI and frontend/API integration.
+> Criei o JobFit para reunir, em um só lugar, as vagas que encontro e entender rapidamente quais combinam melhor com o meu perfil. O projeto também é uma forma prática de aplicar o que venho estudando em backend, APIs, testes e DevOps.
 
 ## 🖥️ Prévia visual
 
